@@ -1,0 +1,118 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://CPU/Terminal.gd" type="Script" id=1]
+[ext_resource path="res://Assets/sci-fi-godot-theme/sci-fi-theme.tres" type="Theme" id=2]
+
+[node name="Terminal" type="CanvasLayer"]
+script = ExtResource( 1 )
+
+[node name="UI" type="VBoxContainer" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MainPanel" type="HSplitContainer" parent="UI"]
+margin_right = 256.0
+margin_bottom = 233.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+split_offset = 128
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Editor" type="TextEdit" parent="UI/MainPanel"]
+margin_right = 159.0
+margin_bottom = 233.0
+syntax_highlighting = true
+show_line_numbers = true
+highlight_all_occurrences = true
+context_menu_enabled = false
+caret_blink = true
+
+[node name="MemoryViewer" type="ItemList" parent="UI/MainPanel"]
+margin_left = 171.0
+margin_right = 256.0
+margin_bottom = 233.0
+
+[node name="ErrorDisplay" type="RichTextLabel" parent="UI"]
+visible = false
+margin_top = 137.0
+margin_right = 256.0
+margin_bottom = 233.0
+rect_min_size = Vector2( 0, 96 )
+focus_mode = 2
+selection_enabled = true
+
+[node name="Close" type="Button" parent="UI/ErrorDisplay"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -21.0
+margin_bottom = 19.0
+text = "X"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI"]
+margin_top = 237.0
+margin_right = 256.0
+margin_bottom = 256.0
+
+[node name="RunToggle" type="CheckButton" parent="UI/HBoxContainer"]
+margin_right = 39.0
+margin_bottom = 19.0
+text = "RUN"
+
+[node name="CompileButton" type="Button" parent="UI/HBoxContainer"]
+margin_left = 43.0
+margin_right = 78.0
+margin_bottom = 19.0
+text = "CMP"
+
+[node name="StepButton" type="Button" parent="UI/HBoxContainer"]
+margin_left = 82.0
+margin_right = 124.0
+margin_bottom = 19.0
+text = "STEP"
+
+[node name="Control" type="Control" parent="UI/HBoxContainer"]
+margin_left = 128.0
+margin_right = 148.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ResetButton" type="Button" parent="UI/HBoxContainer"]
+margin_left = 152.0
+margin_right = 187.0
+margin_bottom = 19.0
+text = "RST"
+
+[node name="Control2" type="Control" parent="UI/HBoxContainer"]
+margin_left = 191.0
+margin_right = 212.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DisconnectButton" type="Button" parent="UI/HBoxContainer"]
+margin_left = 216.0
+margin_right = 256.0
+margin_bottom = 19.0
+text = "EXIT"
+
+[connection signal="pressed" from="UI/ErrorDisplay/Close" to="." method="error_display_close"]
+[connection signal="toggled" from="UI/HBoxContainer/RunToggle" to="." method="run_toggle"]
+[connection signal="pressed" from="UI/HBoxContainer/CompileButton" to="." method="compile"]
+[connection signal="pressed" from="UI/HBoxContainer/StepButton" to="." method="step"]
+[connection signal="pressed" from="UI/HBoxContainer/ResetButton" to="." method="reset"]
+[connection signal="pressed" from="UI/HBoxContainer/DisconnectButton" to="." method="detach"]

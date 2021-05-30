@@ -1,0 +1,79 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Actor/Actor.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/cyberpop/Objects & Extras/CP_CleanBot.png" type="Texture" id=2]
+[ext_resource path="res://Actor/CPUMotionController.gd" type="Script" id=3]
+[ext_resource path="res://CPU/CPU_v1.tscn" type="PackedScene" id=4]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=1]
+
+[node name="SweeperRobot" instance=ExtResource( 1 )]
+move_speed = 5.0
+
+[node name="Sprite" parent="." index="1"]
+texture = ExtResource( 2 )
+hframes = 3
+vframes = 4
+frame = 1
+
+[node name="AnimationTree" parent="." index="3"]
+parameters/playback = SubResource( 1 )
+
+[node name="MotionController" type="Node2D" parent="." index="4"]
+script = ExtResource( 3 )
+look_distance = 16.0
+
+[node name="RayCast2D" type="RayCast2D" parent="MotionController" index="0"]
+enabled = true
+cast_to = Vector2( 0, 16 )
+collision_mask = 3
+
+[node name="CPU" parent="." index="5" instance=ExtResource( 4 )]
+clock_frequency = 1
+recovery_firmware = "; 0x80 is zero, because everything is signed.
+!DEF xmov 0xF0
+!DEF ymov 0xF1
+!DEF bonk 0xF2
+!DEF count 0xF3
+!DEF dir 0xF4
+MOV 0x80 xmov
+MOV 0x80 ymov
+MOV 0x0 count
+MOV 0x0 dir
+
+; Count to 10 or, if we hit something, turn.
+START: 
+ADD 0x1 *count count
+JE *BONK 0x0 TURN
+MOV 0x0 BONK ; Clear bonk.
+MOV 0x11 COUNT ; We bonked!  Set our counter to max so we turn.
+TURN:
+JG 0x10 *COUNT START
+MOV 0x0 COUNT
+JE *dir 0x0 GO_UP
+JE *dir 0x1 GO_LEFT
+JE *dir 0x2 GO_DOWN
+JE *dir 0x3 GO_RIGHT
+MOV 0x0 dir
+JMP START
+
+GO_RIGHT:
+MOV 0x0 dir
+MOV 0xFF xmov
+MOV 0x80 ymov
+JMP START
+GO_UP:
+MOV 0x1 dir
+MOV 0x80 xmov
+MOV 0x0 ymov
+JMP START
+GO_LEFT:
+MOV 0x2 dir
+MOV 0x0 xmov
+MOV 0x80 ymov
+JMP START
+GO_DOWN:
+MOV 0x3 dir
+MOV 0x80 xmov
+MOV 0xFF ymov
+JMP START"

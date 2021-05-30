@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Actor/Player/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Weapons/CyberDeck.tscn" type="PackedScene" id=2]
+[ext_resource path="res://CPU/Terminal.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Actor/Sweeper/SweeperRobot.tscn" type="PackedScene" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+
+[node name="Main" type="Node2D"]
+
+[node name="SweeperRobot" parent="." instance=ExtResource( 4 )]
+position = Vector2( 118.326, 79.0822 )
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+position = Vector2( 89.5353, 77.0627 )
+collision_layer = 1
+collision_mask = 1
+move_speed = 36.0
+starting_weapon = ExtResource( 2 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2( 115.371, 126.508 )
+shape = SubResource( 1 )
+
+[node name="Terminal" parent="." instance=ExtResource( 3 )]
+pause_mode = 2
