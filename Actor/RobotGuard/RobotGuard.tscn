@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Actor/Actor.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Actor/RobotGuard/GuardMotionController.gd" type="Script" id=2]
+[ext_resource path="res://Assets/futurefantasy/characters/military3.png" type="Texture" id=3]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=1]
+
+[node name="RobotGuard" instance=ExtResource( 1 )]
+max_health = 13
+move_speed = 8.0
+
+[node name="Sprite" parent="." index="1"]
+texture = ExtResource( 3 )
+hframes = 3
+vframes = 4
+frame = 1
+region_enabled = true
+region_rect = Rect2( 232, 0, 80, 144 )
+
+[node name="AnimationTree" parent="." index="3"]
+parameters/playback = SubResource( 1 )
+
+[node name="MotionController" type="Node2D" parent="." index="4"]
+script = ExtResource( 2 )
+time_between_turns = 3.0
+
+[node name="RayCast2D" type="RayCast2D" parent="MotionController" index="0"]
+
+[node name="VisionCone" type="Area2D" parent="MotionController" index="1"]
+
+[node name="CollisionShape" type="CollisionPolygon2D" parent="MotionController/VisionCone" index="0"]
+polygon = PoolVector2Array( 0, 0, 96, 64, 128, 0, 96, -64 )
+
+[node name="VisionConeDisplay" type="Polygon2D" parent="MotionController" index="2"]
+color = Color( 1, 0, 0, 0.156863 )
+antialiased = true
+polygon = PoolVector2Array( 0, 0, 96, 64, 128, 0, 96, -64 )
