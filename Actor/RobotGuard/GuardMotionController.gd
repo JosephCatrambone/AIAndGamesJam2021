@@ -53,16 +53,6 @@ func _process_wander(delta):
 		var angle = facing.angle()
 		angle += PI/2.0 * rng.randi_range(0, 3)
 		dxdy = Vector2(cos(angle), sin(angle))
-		if dxdy.x == 0 and dxdy.y == -1:
-			print("Facing UP")
-		elif dxdy.x == 0 and dxdy.y == 1:
-			print("Facing DOWN")
-		elif dxdy.x == -1 and dxdy.y == 0:
-			print("Facing LEFT")
-		elif dxdy.x == 1 and dxdy.y == 0:
-			print("Facing RIGHT")
-		else:
-			print("Facing " + str(angle) + " | " + str(dxdy))
 
 func _process_follow(delta):
 	# If the active point is none AND the active path is empty, we're done.

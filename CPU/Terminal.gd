@@ -6,7 +6,7 @@ onready var main_panel = $UI/MainPanel
 var target_cpu = null
 onready var editor = $UI/MainPanel/Editor
 onready var memory_viewer = $UI/MainPanel/MemoryViewer
-onready var run_toggle:Button = $UI/HBoxContainer/RunToggle
+onready var run_toggle_button:Button = $UI/HBoxContainer/RunToggle
 
 func _ready():
 	# Register with global.
@@ -23,7 +23,7 @@ func attach_to_cpu(cpu_target):
 	self.editor.set_text(self.target_cpu.source_code)
 	self.display.show()
 	#self.set_global_pos(global.player.get_pos() - self.get_size()/2);
-	self.run_toggle.pressed = not self.target_cpu.pause_execution
+	self.run_toggle_button.pressed = not self.target_cpu.pause_execution
 
 func _process(delta):
 	if is_active():

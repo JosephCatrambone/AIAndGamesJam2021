@@ -31,6 +31,6 @@ func _process(delta):
 	var previous_velocity = (self.global_position - self.previous_position) / max(0.1, delta)
 	var lookahead = lookahead_distance * (previous_velocity + velocity) / 2
 	#self.offset = 0.9*self.offset + 0.1*lookahead
-	self.offset = lookahead*0.02 + self.offset*0.98
+	self.offset = lookahead*0.01 + self.offset*0.99
 	
 	self.previous_position = self.global_position
