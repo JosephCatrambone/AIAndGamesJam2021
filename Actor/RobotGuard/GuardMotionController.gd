@@ -67,9 +67,7 @@ func _process_follow(delta):
 	self.dxdy = Vector2(sign(delta_position.x), sign(delta_position.y))
 
 func start_follow(target:Vector2):
-	# TODO: Don't hardcode this name.
-	var navmesh:Navigation2D = get_tree().get_root().get_node("NavMesh")
-	self.active_path = navmesh.get_simple_path(self.global_position, target)
+	self.active_path = Globals.navigation_mesh_ref.get_simple_path(self.global_position, target)
 
 func add_visible_candidate(candidate):
 	self.potential_visible_bodies.append(candidate)
