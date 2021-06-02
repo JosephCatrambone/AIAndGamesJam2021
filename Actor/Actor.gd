@@ -18,6 +18,8 @@ var interact:bool = false
 var motion_controller:MotionController
 
 # Graphical components + display
+export(Array, Texture) var spritesheets:Array
+onready var sprite:Sprite = $Sprite
 onready var anim_player:AnimationPlayer = $AnimationPlayer
 onready var anim_tree:AnimationTree = $AnimationTree
 
@@ -26,6 +28,13 @@ var weapon:Node
 export(PackedScene) var starting_weapon
 
 func _ready():
+	# Randomize look, maybe.
+	if len(spritesheets) > 0:
+		self.move_speed = Globals.rng.randi_range(5, 16)
+		sprite.texture = spritesheets[Globals.rng.randi_range(0, len(spritesheets)-1)]
+		sprite.region_enabled = true
+		sprite.region_rect = Rect2(48*Globals.rng.randi_range(0, 3), 128*Globals.rng.randi_range(0, 1), 48, 128)
+	
 	motion_controller = self.get_node("MotionController")
 	if starting_weapon != null:
 		var new_weapon = starting_weapon.instance()

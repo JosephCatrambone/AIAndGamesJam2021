@@ -1,14 +1,23 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Actor/Person/PersonMotionController.gd" type="Script" id=1]
 [ext_resource path="res://Assets/futurefantasy/characters/military3.png" type="Texture" id=2]
 [ext_resource path="res://Actor/Actor.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Assets/horrorcityspritepack/HC_Humans1A.png" type="Texture" id=4]
+[ext_resource path="res://Assets/horrorcityspritepack/HC_Humans4B.png" type="Texture" id=5]
+[ext_resource path="res://Assets/horrorcityspritepack/HC_Humans3A.png" type="Texture" id=6]
+[ext_resource path="res://Assets/horrorcityspritepack/HC_Humans2B.png" type="Texture" id=7]
+[ext_resource path="res://Assets/horrorcityspritepack/HC_Humans3B.png" type="Texture" id=8]
+[ext_resource path="res://Assets/horrorcityspritepack/HC_Humans4A.png" type="Texture" id=9]
+[ext_resource path="res://Assets/horrorcityspritepack/HC_Humans1B.png" type="Texture" id=10]
+[ext_resource path="res://Assets/horrorcityspritepack/HC_Humans2A.png" type="Texture" id=11]
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=1]
 
-[node name="RobotGuard" instance=ExtResource( 3 )]
+[node name="Person" instance=ExtResource( 3 )]
 max_health = 13
 move_speed = 8.0
+spritesheets = [ ExtResource( 4 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 7 ), ExtResource( 6 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 5 ) ]
 
 [node name="Sprite" parent="." index="1"]
 texture = ExtResource( 2 )
@@ -33,6 +42,7 @@ time_between_turns = 3.0
 polygon = PoolVector2Array( 0, 0, 96, 64, 128, 0, 96, -64 )
 
 [node name="VisionConeDisplay" type="Polygon2D" parent="MotionController" index="2"]
+visible = false
 color = Color( 1, 0, 0, 0.156863 )
 antialiased = true
 polygon = PoolVector2Array( 0, 0, 96, 64, 128, 0, 96, -64 )

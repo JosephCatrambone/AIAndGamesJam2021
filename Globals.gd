@@ -1,6 +1,6 @@
 extends Node
 
-var rng = RandomNumberGenerator.new()
+var rng:RandomNumberGenerator = RandomNumberGenerator.new()
 
 # Expect the terminal to register itself.
 var terminal_ref

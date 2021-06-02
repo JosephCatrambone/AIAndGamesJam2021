@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Assets/Tileset.tres" type="TileSet" id=1]
+[ext_resource path="res://Assets/MapTileset.tres" type="TileSet" id=1]
 [ext_resource path="res://Level/Level.gd" type="Script" id=2]
 
 [node name="NavMesh" type="Navigation2D"]

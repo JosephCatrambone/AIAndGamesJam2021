@@ -30,6 +30,7 @@ export(float) var time_between_turns:float = 1.0
 var time_to_next_turn:float = 0.0
 
 func _ready():
+	time_between_turns = Globals.rng.randf_range(0.5, 3.0)
 	vision_cone.connect("body_entered", self, "add_visible_candidate")
 	vision_cone.connect("body_exited", self, "remove_visible_candidate")
 
@@ -48,11 +49,16 @@ func _process_wander(delta):
 	time_to_next_turn -= delta
 	if time_to_next_turn < 0:
 		time_to_next_turn = time_between_turns
-		var rng = RandomNumberGenerator.new()
 		var facing:Vector2 = get_parent().face_direction
 		var angle = facing.angle()
-		angle += PI/2.0 * rng.randi_range(0, 3)
-		dxdy = Vector2(cos(angle), sin(angle))
+		var angle_multiple = Globals.rng.randi_range(-1, 1)
+		if angle_multiple == 0:
+			self.start_follow(Vector2(Globals.rng.randf_range(-100, 100), Globals.rng.randf_range(-100, 100)))
+			self.state = GuardState.FOLLOW_PATH
+			return
+		else:
+			angle += PI/2.0 * angle_multiple
+			dxdy = Vector2(cos(angle), sin(angle)) * 0.001
 
 func _process_follow(delta):
 	# If the active point is none AND the active path is empty, we're done.
@@ -61,7 +67,7 @@ func _process_follow(delta):
 		return
 	# Otherwise, move towards an active path.
 	var delta_position = self.active_path[0]
-	if delta_position < distance_before_popping_nav_point*delta:
+	if delta_position.length_squared() < distance_before_popping_nav_point:
 		self.active_path.remove(0)
 		return  # Resume next cycle.
 	self.dxdy = Vector2(sign(delta_position.x), sign(delta_position.y))
