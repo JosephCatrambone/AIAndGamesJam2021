@@ -50,7 +50,6 @@ func equip(new_weapon):
 
 func _process(delta):
 	if motion_controller != null:
-		motion_controller.update()
 		var direction = Vector2(motion_controller.get_x_axis(), motion_controller.get_y_axis())
 		self.move_direction = direction
 		if direction:

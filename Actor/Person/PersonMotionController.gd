@@ -35,54 +35,7 @@ func _ready():
 	vision_cone.connect("body_exited", self, "remove_visible_candidate")
 
 func _process(delta):
-	match self.state:
-		GuardState.IDLE:
-			pass
-		GuardState.WANDER:
-			_process_wander(delta)
-		GuardState.FOLLOW_PATH:
-			_process_follow(delta)
-		GuardState.PURSUE:
-			pass
-
-func _process_wander(delta):
-	time_to_next_turn -= delta
-	if time_to_next_turn < 0:
-		time_to_next_turn = time_between_turns
-		var facing:Vector2 = get_parent().face_direction
-		var angle = facing.angle()
-		var angle_multiple = Globals.rng.randi_range(-1, 1)
-		if angle_multiple == 0:
-			self.start_follow(Vector2(Globals.rng.randf_range(-100, 100), Globals.rng.randf_range(-100, 100)))
-			self.state = GuardState.FOLLOW_PATH
-			return
-		else:
-			angle += PI/2.0 * angle_multiple
-			dxdy = Vector2(cos(angle), sin(angle)) * 0.001
-
-func _process_follow(delta):
-	# If the active point is none AND the active path is empty, we're done.
-	if self.active_path.empty():
-		self.state = GuardState.WANDER
-		return
-	# Otherwise, move towards an active path.
-	var delta_position = self.active_path[0]
-	if delta_position.length_squared() < distance_before_popping_nav_point:
-		self.active_path.remove(0)
-		return  # Resume next cycle.
-	self.dxdy = Vector2(sign(delta_position.x), sign(delta_position.y))
-
-func start_follow(target:Vector2):
-	self.active_path = Globals.navigation_mesh_ref.get_simple_path(self.global_position, target)
-
-func add_visible_candidate(candidate):
-	self.potential_visible_bodies.append(candidate)
-
-func remove_visible_candidate(candidate):
-	if candidate in self.potential_visible_bodies:
-		self.potential_visible_bodies.erase(candidate)
-	
-func update():
+	update()
 	# Get facing direction from parent.  Let the parent deal with rotation.
 	var facing:Vector2 = get_parent().face_direction
 	
@@ -101,6 +54,59 @@ func update():
 			pass
 			#cpu.memory[BUMP_REPORT] = 1
 			# CPU code will clear bump.
+			
+	match self.state:
+		GuardState.IDLE:
+			pass
+		GuardState.WANDER:
+			_process_wander(delta)
+		GuardState.FOLLOW_PATH:
+			_process_follow(delta)
+		GuardState.PURSUE:
+			pass
+
+func _process_wander(delta):
+	time_to_next_turn -= delta
+	if time_to_next_turn < 0:
+		time_to_next_turn = time_between_turns
+		# Probably shouldn't do this, but it's okay to _read_ the direction.  Just don't WRITE the facing direction.
+		var facing:Vector2 = get_parent().face_direction
+		var angle = facing.angle()
+		var angle_multiple = Globals.rng.randi_range(-1, 1)
+		if angle_multiple == 0:
+			self.active_path = Globals.navigation_mesh_ref.get_simple_path(self.global_position, Globals.get_random_waypoint())
+			self.state = GuardState.FOLLOW_PATH
+			return
+		else:
+			angle += PI/2.0 * angle_multiple
+			dxdy = Vector2(cos(angle), sin(angle)) * 0.001
+
+func _process_follow(delta):
+	# If the active point is none AND the active path is empty, we're done.
+	if self.active_path.empty():
+		self.state = GuardState.WANDER
+		return
+	# Otherwise, move towards an active path.
+	var delta_position = self.active_path[0] - self.global_position
+	if delta_position.length_squared() < distance_before_popping_nav_point:
+		self.active_path.remove(0)
+		return  # Resume next cycle.
+	# Need to round so -0.0 becomes 0.
+	self.dxdy = Vector2(sign(round(delta_position.x)), sign(round(delta_position.y)))
+
+# Path debugging:
+#func _draw():
+#	if self.active_path:
+#		draw_line(Vector2(0, 0), self.active_path[0]-self.global_position, Color(255, 0, 255))
+#		for i in range(len(self.active_path)-1):
+#			draw_line(self.active_path[i]-self.global_position, self.active_path[i+1]-self.global_position, Color(255, 0, 0))
+
+func add_visible_candidate(candidate):
+	self.potential_visible_bodies.append(candidate)
+
+func remove_visible_candidate(candidate):
+	if candidate in self.potential_visible_bodies:
+		self.potential_visible_bodies.erase(candidate)
 
 func get_x_axis() -> float:
 	return dxdy.x

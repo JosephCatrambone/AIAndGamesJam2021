@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Actor/Actor.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Actor/Player/KeyboardInputContoller.gd" type="Script" id=2]
 [ext_resource path="res://Assets/cyberpop/Objects & Extras/Morgan.png" type="Texture" id=3]
+[ext_resource path="res://Weapons/CyberDeck.tscn" type="PackedScene" id=4]
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=1]
 
@@ -10,6 +11,8 @@
 "Citizen",
 "Player",
 ] instance=ExtResource( 1 )]
+move_speed = 32.0
+starting_weapon = ExtResource( 4 )
 
 [node name="Sprite" parent="." index="1"]
 texture = ExtResource( 3 )

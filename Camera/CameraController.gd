@@ -27,10 +27,13 @@ func _process(delta):
 		self.global_position = follow_target.global_position
 		
 	# Offset will let us look in the direction we're going.
-	var velocity = delta_position / max(0.1, delta)
-	var previous_velocity = (self.global_position - self.previous_position) / max(0.1, delta)
-	var lookahead = lookahead_distance * (previous_velocity + velocity) / 2
-	#self.offset = 0.9*self.offset + 0.1*lookahead
-	self.offset = lookahead*0.01 + self.offset*0.99
+	if lookahead_distance > 0:
+		var velocity = delta_position / max(0.1, delta)
+		var previous_velocity = (self.global_position - self.previous_position) / max(0.1, delta)
+		var lookahead = lookahead_distance * (previous_velocity + velocity) / 2
+		#self.offset = 0.9*self.offset + 0.1*lookahead
+		self.offset = lookahead*0.01 + self.offset*0.99
+	else:
+		self.offset = Vector2(0, 0)
 	
 	self.previous_position = self.global_position

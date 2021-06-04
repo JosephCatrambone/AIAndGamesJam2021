@@ -2,9 +2,6 @@ extends Node2D
 
 class_name MotionController
 
-func update():
-	pass
-
 func get_x_axis() -> float:
 	return 0.0
 

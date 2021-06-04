@@ -9,7 +9,7 @@ const MOVE_X_ADDRESS = 0xF0
 const MOVE_Y_ADDRESS = 0xF1
 const BUMP_REPORT = 0xF2
 
-func update():
+func _process(delta):
 	# Get facing direction from parent.  Let the parent deal with rotation.
 	var facing:Vector2 = get_parent().face_direction
 	ray.cast_to = facing.normalized() * look_distance

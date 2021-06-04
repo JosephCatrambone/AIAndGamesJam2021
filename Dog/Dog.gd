@@ -16,6 +16,8 @@ var path:PoolVector2Array
 enum { SIT, STAND, WALK }
 var state = SIT
 var happiness:float = 1.0
+var energy:float = 1.0
+export(float) var minimum_energy_to_walk:float = 5.0  # What is the minimum amount of rest the dog requires to get going again?
 
 func _ready():
 	pass
@@ -49,18 +51,30 @@ func _update_animation():
 	anim_tree["parameters/IdleWag/blend_position"] = self.face_direction
 
 func _process_sit(delta):
-	if Input.is_action_just_pressed("ui_accept"):
-		self.state = STAND
+	self.energy += delta
+	if self.energy > self.minimum_energy_to_walk:
+		if Globals.rng.randf() > 10.0/self.energy:
+			self.state = STAND
 
 func _process_stand(delta):
-	if Input.is_action_just_pressed("ui_accept"):
-		self.path = Globals.get_nav_path(self.global_position, Vector2(Globals.rng.randf_range(-100, 100), Globals.rng.randf_range(-100, 100)))
+	# If we have a path in mind, go.  Otherwise, think about it.
+	if self.path == null or self.path.empty():
+		self.path = Globals.get_nav_path(self.global_position, Globals.get_random_waypoint())
+	if Globals.rng.randi_range(0, 4) == 0:
 		self.state = WALK
 
 func _process_walk(delta):
+	# Are we tired?
+	energy -= delta
+	if energy <= 0:
+		self.state = SIT
+		return
+	
+	# Do we know where to go or are we at our destination?
 	if path.empty():
 		self.state = STAND
 		return
+		
 	# Can we pop our current nav point?
 	var delta_position = path[0] - self.global_position
 	if delta_position.length_squared() < distance_before_popping_nav_point:
@@ -75,7 +89,7 @@ func _process_walk(delta):
 	move_direction = Vector2(sign(delta_position.x), sign(delta_position.y))
 	self.move_and_slide(move_direction.normalized()*self.max_speed)
 	if move_direction:
-		self.face_direction = move_direction
+		self.face_direction = Vector2(round(move_direction.x), round(move_direction.y))
 
 # Win condition!
 signal win
